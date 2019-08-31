@@ -11,9 +11,23 @@ public class SoundHelperImpl implements SoundHelper {
 
     @Override
     public Sound getMidiInstrumentFromPatch(int patch) {
+        // noop
+        return null;
+    }
+
+    @Override
+    public Sound getMidiInstrumentFromPatch(int channel, int patch) {
+        int[] patchBank;
+        // use percussion bank for channel 10
+        if (channel == 9) {
+            patchBank = percussion;
+            patch = patch - 32;
+        } else {
+            patchBank = instruments_1_14;
+        }
+
         // look up the instrument matching the patch
-        // TODO: 1.14 - does this still work? (last verified in 1.12)
-        switch (instruments_1_12[patch]) {
+        switch (patchBank[patch]) {
             case 0:
                 return Sound.BLOCK_NOTE_BLOCK_HARP;
             case 1:
@@ -36,13 +50,35 @@ public class SoundHelperImpl implements SoundHelper {
                 return Sound.BLOCK_NOTE_BLOCK_XYLOPHONE;
             case 10:
                 return Sound.BLOCK_NOTE_BLOCK_PLING;
+            case 11:
+                return Sound.BLOCK_NOTE_BLOCK_BANJO;
+            case 12:
+                return Sound.BLOCK_NOTE_BLOCK_BIT;
+            case 13:
+                return Sound.BLOCK_NOTE_BLOCK_COW_BELL;
+            case 14:
+                return Sound.BLOCK_NOTE_BLOCK_DIDGERIDOO;
+            case 15:
+                return Sound.BLOCK_NOTE_BLOCK_IRON_XYLOPHONE;
+            case 30:
+                return Sound.ENTITY_CREEPER_HURT;
         }
-        return getDefaultMidiInstrument();
+        return getDefaultMidiInstrument(channel);
     }
 
     @Override
     public Sound getDefaultMidiInstrument() {
-        return Sound.BLOCK_NOTE_BLOCK_HARP;
+        // noop
+        return null;
+    }
+
+    @Override
+    public Sound getDefaultMidiInstrument(int channel) {
+        if (channel == 9) {
+            return Sound.BLOCK_NOTE_BLOCK_COW_BELL;
+        } else {
+            return Sound.BLOCK_NOTE_BLOCK_HARP;
+        }
     }
 
     @Override

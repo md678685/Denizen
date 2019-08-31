@@ -94,9 +94,9 @@ public class NoteBlockReceiver implements Receiver, MetaEventListener {
         int channel = message.getChannel();
 
         // If this is a percussion channel, return
-        if (channel == 9) {
-            return;
-        }
+//        if (channel == 9) {
+//            return;
+//        }
 
         if (channelPatches == null) {
             Debug.echoError("Trying to play notes on closed midi NoteBlockReceiver!");
@@ -111,10 +111,13 @@ public class NoteBlockReceiver implements Receiver, MetaEventListener {
         float volume = VOLUME_RANGE * (message.getData2() / 127.0f);
 
         SoundHelper soundHelper = NMSHandler.getSoundHelper();
-        Sound instrument = soundHelper.getDefaultMidiInstrument();
+
+        Sound instrument = soundHelper.getDefaultMidiInstrument(channel);
         if (patch != null) {
-            instrument = soundHelper.getMidiInstrumentFromPatch(patch);
+            instrument = soundHelper.getMidiInstrumentFromPatch(channel, patch);
         }
+
+        if (instrument == null) return;
 
         if (location != null) {
             location.getWorld().playSound(location, instrument, volume, pitch);
